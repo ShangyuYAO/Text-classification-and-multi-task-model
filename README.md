@@ -2,7 +2,8 @@
 ## Method: TF-IDF combined with neural network.
 
 > This project aims to investigate the performance of single-head and multi-head classification models through a text classification task. The project employs the TF-IDF method combined with a neural network for text classification, where TF-IDF is used for feature vector extraction, and the neural network serves as the classifier. Specifically, we focus on two classification criteria: a primary criterion corresponding to the gender of the text author and a secondary criterion corresponding to the date of the first edition. Initially, a model with a single classification head is implemented to classify the text based on the gender of the author. Subsequently, a model with two classification heads is implemented to simultaneously classify the gender of both text authors and the date of the first edition. Finally, the performance of the two models will be compared.
-> 
+>
+
 ## Table of Contents  
 1. [Introduction](#introduction) 
 2. [Methodology](#methodology) 
@@ -11,6 +12,7 @@
 5. [Conclusion](#conclusion) 
 6. [Code Usage Suggestions](#code-usage-suggestions) 
 7. [Reference](#reference)
+
 ## Introduction
 Nowadays, multi-task models are widely used in various fields such as natural language processing, computer vision, speech recognition. The demand for research and optimization of multi-task models is growing.
 
@@ -19,19 +21,16 @@ A multi-task model is a type of machine learning model designed to simultaneousl
 This project aims to explore the performance of multi-head models in text classification by constructing a relatively simple dual-head neural network model. During this process, a method called TF-IDF is employed to extract feature vectors, which are then connected to the single-head or dual-head neural networks we build to accomplish the text classification task.
 
 ## Rrinciple
-
 In this section, the principles of TF-IDF and multi-task models will be briefly introduced.
 
 ### TF-IDF
-TF-IDF, which stands for Term Frequency-Inverse Document Frequency, is a numerical statistic widely used in natural language processing and information retrieval. It quantifies the importance of a term (word) relative to a collection of documents. The idea behind TF-IDF is to assign a weight to each term based on how often it appears in a specific document (Term Frequency) and how unique it is across the entire document collection (Inverse Document Frequency).
-
-The definition of TF-IDF is the product of two statistics, term frequency and inverse document frequency.
+TF-IDF, which stands for Term Frequency-Inverse Document Frequency, is a numerical statistic widely used in natural language processing and information retrieval. It quantifies the importance of a term (word) relative to a collection of documents. The idea behind TF-IDF is to assign a weight to each term based on how often it appears in a specific document (Term Frequency) and how unique it is across the entire document collection (Inverse Document Frequency). The definition of TF-IDF is the product of two statistics, term frequency and inverse document frequency.
 
 **Term frequency(TF)**
 
 Term Frequency (TF) measures how often a term appears in a document. The formula for Term Frequency is:
 
-$\mathrm{tf}(t, d) = \frac{f_{t,d}}{\sum_{t' \in d}f_{t',d}}$
+<font size=30>$$\mathrm{tf}(t, d) = \frac{f_{t,d}}{\sum_{t' \in d}f_{t',d}}$$</font>
 
 Where:
  - $f_{t,d}$ is the frequency of term $\mathbf{t}$ in document $\mathbf{d}$.
@@ -39,7 +38,7 @@ Where:
 
 In a more intuitive form, the formula can be expressed as follows:
 
-$TF(t,d)=\frac{\text{Number of times term t appears in document d}}{\text{Total number of terms indocument d}}$
+<font size=30>$$TF(t,d)=\frac{\text{Number of times term t appears in document d}}{\text{Total number of terms indocument d}}$$</font>
 
 It's a normalized count representing the frequency of a term within a document. TF gives higher weights to terms that occur more frequently in a document.
 
@@ -47,7 +46,7 @@ It's a normalized count representing the frequency of a term within a document. 
 
 Inverse Document Frequency (IDF) measures the importance of a term in the entire collection of documents. The formula for Inverse Document Frequency is:
 
-$\mathrm{idf}(t, D) =  \log \frac{N}{|\{d \in D: t \in d\}|+1}$
+<font size=30>$$\mathrm{idf}(t, D) =  \log \frac{N}{|\{d \in D: t \in d\}|+1}$$</font>
 
 where
  - $\mathbf{N}$ is total number of documents in the corpus $N = {|D|}$.
@@ -55,7 +54,7 @@ where
 
 In a more intuitive form, the formula can be expressed as follows:
 
-$IDF(t,D)=log\left(\frac{\text{Number number of documents in the collection D}}{\text{Number of documents containing term t}+1}\right)$
+<font size=30>$$IDF(t,D)=log\left(\frac{\text{Number number of documents in the collection D}}{\text{Number of documents containing term t}+1}\right)$$</font>
 
  It penalizes terms that are common across many documents and gives higher weights to terms that are rare and appear in fewer documents.
  
@@ -63,7 +62,7 @@ $IDF(t,D)=log\left(\frac{\text{Number number of documents in the collection D}}{
 
 Then tf–idf is calculated as:
 
-$\displaystyle \mathrm {tfidf} (t,d,D)=\mathrm {tf} (t,d)\cdot \mathrm {idf} (t,D)$
+<font size=30>$$\displaystyle \mathrm {tfidf} (t,d,D)=\mathrm {tf} (t,d)\cdot \mathrm {idf} (t,D)$$</font>
 
 This combined score helps to identify the importance of a term in a specific document relative to its importance across the entire document collection.
 
@@ -71,7 +70,7 @@ This combined score helps to identify the importance of a term in a specific doc
 Multi-task learning has two fundamental frameworks: Hard Parameter Sharing and Soft Parameter Sharing. Their graphical representations are as follows:
 
 <p float="left">
-  <img src="" width="50%" />
+  <img src="https://github.com/ShangyuYAO/Text-classification-and-multi-task-model/blob/main/Readme_hard_soft.png" width="50%" />
 </p>
 
 **Hard Parameter Sharing**
@@ -79,6 +78,7 @@ In the Hard Parameter Sharing framework, multiple tasks collectively leverage a 
 
 **Soft Parameter Sharing**
 Conversely, the Soft Parameter Sharing framework introduces task-specific parameters alongside the shared ones. Each task possesses its unique set of parameters tailored to its specific requirements. These task-specific parameters are allowed to deviate from the shared ones, offering a degree of flexibility. To ensure a balance between task-specific adaptations and shared knowledge, a penalty is imposed on task-specific parameters if they deviate significantly from the shared parameters. 
+
 
 ## Methodology
 
@@ -89,13 +89,21 @@ TF-IDF transforms textual data into a feature vector, where the vector's length 
 This feature matrix is then fed into a neural network. For the neural network architecture, I opted for a relatively simple framework—a multilayer perceptron with a single hidden layer. The input layer consists of 10,000 neurons, corresponding to the columns of the TF-IDF feature matrix. The hidden layer contains 100 neurons. For a single-head model, the output layer has two neurons, suitable for a binary classification task. For a dual-head model, the output layer comprises four neurons, addressing two binary classification tasks. Each classification head utilizes cross-entropy loss as the loss function, and the loss of the dual-head model is the weighted sum of the losses from each head.
 
 ## Data
-The dataset comprising 1052 texts (articles, books). The naming convention for these texts is consistent taking the form, for instance, of (BAZIN)(René)(l'isolée)(1)(1905)(1853)(1932)(fr)(z)(z)(V)(R)(T).txt. The first two sets of parentheses store the author's last name and first name, respectively. The third set of parentheses contains the title of the text. The fourth set of parentheses holds information about the author's gender, where 1 represents male and 2 represents female. The fifth set of parentheses stores la date de première édition. In this dataset, the distribution of author genders and la date de première édition is illustrated in the accompanying figures. For the project, I partitioned the dataset into training and testing sets with a ratio of 7:3, resulting in 737 texts for training and 315 texts for testing.
+The dataset comprising 1052 texts (articles, books). The naming convention for these texts is consistent taking the form, for instance, of (BAZIN)(René)(l'isolée)(1)(1905)(1853)(1932)(fr)(z)(z)(V)(R)(T).txt. The first two sets of parentheses store the author's last name and first name, respectively. The third set of parentheses contains the title of the text. The fourth set of parentheses holds information about the author's gender, where 1 represents male and 2 represents female. The fifth set of parentheses stores the date of the first edition. In this dataset, the distribution of author genders and the date of the first edition is illustrated in the accompanying figures. For the project, I partitioned the dataset into training and testing sets with a ratio of 7:3, resulting in 737 texts for training and 315 texts for testing.
+
+<p float="left">
+  <img src="https://github.com/ShangyuYAO/Text-classification-and-multi-task-model/blob/main/readme_gender.jpg" width="30%" />
+  <img src="https://github.com/ShangyuYAO/Text-classification-and-multi-task-model/blob/main/readme_year.jpg" width="30%" /> 
+</p>
 
 ## Result
 The confusion matrices for the single-head and dual-head models, obtained from classifying texts based on the author's gender, are shown in the figure below. Both matrices represent the best classification performance achieved after ten training epochs. Through experimentation, a slight improvement in the classification performance of the first head was observed upon introducing the second classification head.
 
 Due to the shared underlying representation between the first and second classification heads, introducing the second head provides additional information to the first head, possibly contributing to the improvement in the performance of the first head. In fact, upon closer examination of the dataset, it is observed that works authored by the same individual often have the date of the first edition relatively close. This observation may offer valuable information for determining the author's identity and gender when classifying works.
-
+<p float="left">
+  <img src="https://github.com/ShangyuYAO/Text-classification-and-multi-task-model/blob/main/readme_before.jpg" width="30%" />
+  <img src="https://github.com/ShangyuYAO/Text-classification-and-multi-task-model/blob/main/Readme_after.jpg" width="30%" /> 
+</p>
 
 ## Conclusion
 In this project, I employed a simple multilayer perceptron to construct both a single-head model and a dual-head model, comparing their performances in a text classification task. Through testing, a slight improvement in the classification performance of the original head was observed upon introducing the second classification head. This suggests that multi-head or multi-task models relying on shared underlying representations may achieve better results than single-head or single-task models. However, these results may not be generalizable because the model structure used in this project is singular and simplistic. To enhance the universality of the findings, it is necessary to explore and evaluate various model architectures.
